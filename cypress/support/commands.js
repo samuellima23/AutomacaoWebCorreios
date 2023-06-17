@@ -23,21 +23,28 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import BuscarCepPage from "./PageObject/BuscarCepPage"
 
+describe('Busca de CEP', () => {
+  beforeEach(() => {
+    BuscarCepPage.visit()
+  })
 
+  it('Realizar a busca com o valor "69005-040"', () => {
+    const cep = '69005-040'
 
-describe('Validar que a busca por CEP válido funciona corretamente', () => {
-    beforeEach('Acessar a página principal dos correios',() => {
-     cy.visit('http://www.buscacep.correios.com.br')
-    })
+    BuscarCepPage.preencherCampoCep(cep)
+    BuscarCepPage.clicarBotaoBuscar()
 
-    it('Realizar a busca com CEP válido', () => {
-        cy.get('[id="endereco"]').type('69005-040');
-        cy.get('[id="btn_pesquisar"]').click();
-      })
+    BuscarCepPage.verificarResultadoDaBusca().should('have.length', 1)
+  })
 
-    it('Realizar a busca com nome de loja válida', () => {
-        cy.get('[id="endereco"]').type('Lojas Bemol');
-        cy.get('[id="btn_pesquisar"]').click();
-      })
+  it('Realizar a busca com o valor "Lojas Bemol"', () => {
+    const valorBusca = 'Lojas Bemol'
+
+    BuscarCepPage.preencherCampoCep(valorBusca)
+    BuscarCepPage.clicarBotaoBuscar()
+
+    BuscarCepPage.verificarResultadoDaBusca().should('have.length', 1)
+  })
 })
